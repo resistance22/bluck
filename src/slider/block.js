@@ -23,6 +23,7 @@ const {
 	SelectControl,
 	TextControl,
 	ToggleControl,
+	IconButton,
 } = wp.components;
 /**
  * Register: aa Gutenberg Block.
@@ -83,6 +84,9 @@ registerBlockType( 'cgb/slide-js', {
 				backgroundColor: '#fff',
 			},
 		},
+		backgroundImage: {
+			type: 'string',
+		},
 	},
 
 	/**
@@ -107,6 +111,7 @@ registerBlockType( 'cgb/slide-js', {
 			descColor,
 			backgroundType,
 			backgroundStyle,
+			backgroundImage,
 		} = attributes;
 
 		const onTitleChange = ( slideTitle ) => {
@@ -143,12 +148,8 @@ registerBlockType( 'cgb/slide-js', {
 				},
 			} );
 		};
-		const onSelectImage = ( Image ) => {
-			setAttributes( {
-				backgroundStyle: {
-					backgroundImage: Image.sizes.full.url,
-				},
-			} );
+		const onSelectImage = ( IMG ) => {
+			setAttributes( { backgroundImage: IMG.sizes.full.url } );
 		};
 		return (
 			<div className="bluck-Slide" style={ backgroundStyle }>
@@ -188,6 +189,7 @@ registerBlockType( 'cgb/slide-js', {
 							] }
 							onChange={ changeBGType }
 						/>
+
 						{ backgroundType === 'Color' && (
 							<div>
 								<p>{ __( 'Select Your Slide Backgroud Color:' ) }</p>
@@ -197,7 +199,21 @@ registerBlockType( 'cgb/slide-js', {
 						}
 						{
 							backgroundType === 'Image' && (
-								<p><strong>test</strong></p>
+								<MediaUpload
+									onSelect={ onSelectImage }
+									value={ backgroundImage }
+									allowedTypes={ [ 'image' ] }
+									render={ ( { open } )=>{
+									// eslint-disable-next-line no-unused-expressions
+										return ( <IconButton
+											onClick={ open }
+											icon="upload"
+											className="editor-media-placeholder__button is-button is-default is-large"
+										>
+											Background Image
+										</IconButton> );
+									} }
+								/>
 							)
 						}
 					</PanelBody>
