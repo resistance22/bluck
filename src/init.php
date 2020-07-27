@@ -28,11 +28,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 function bluck_cgb_block_assets() { // phpcs:ignore
+
+	wp_register_style( 'splide-core', plugins_url('assets/splide.min.css', dirname( __FILE__ )), [], null );
+
+
+
 	// Register block styles for both frontend + backend.
 	wp_register_style(
 		'bluck-cgb-style-css', // Handle.
 		plugins_url( 'dist/blocks.style.build.css', dirname( __FILE__ ) ), // Block style CSS.
-		is_admin() ? array( 'wp-editor' ) : null, // Dependency to include the CSS after it.
+		is_admin() ? array( 'wp-editor', 'splide-core' ) : array('splide-core'), // Dependency to include the CSS after it.
 		null // filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.style.build.css' ) // Version: File modification time.
 	);
 
@@ -76,22 +81,40 @@ function bluck_cgb_block_assets() { // phpcs:ignore
 	 * @link https://wordpress.org/gutenberg/handbook/blocks/writing-your-first-block-type#enqueuing-block-scripts
 	 * @since 1.16.0
 	 */
-	$blocks = ['cgb/bluck-cgb-block-js', 'cgb/slide-js'];
+	$blocks = ['cgb/bluck-cgb-block-js', 'cgb/slide'];
 
-
-	foreach($blocks as $block){
-		register_block_type(
-			$block, array(
-				// Enqueue blocks.style.build.css on both frontend & backend.
-				'style'         => 'bluck-cgb-style-css',
-				// Enqueue blocks.build.js in the editor only.
-				'editor_script' => 'bluck-cgb-block-js',
-				// Enqueue blocks.editor.build.css in the editor only.
-				'editor_style'  => 'bluck-cgb-block-editor-css',
-			)
-		);
-	}
+	register_block_type(
+		'cgb/slide-js', array(
+			// Enqueue blocks.style.build.css on both frontend & backend.
+			'style'         => 'bluck-cgb-style-css',
+			// Enqueue blocks.build.js in the editor only.
+			'editor_script' => 'bluck-cgb-block-js',
+			// Enqueue blocks.editor.build.css in the editor only.
+			'editor_style'  => 'bluck-cgb-block-editor-css',
+		)
+	);
+	register_block_type(
+		'cgb/slider', array(
+			// Enqueue blocks.style.build.css on both frontend & backend.
+			'style'         => 'bluck-cgb-style-css',
+			// Enqueue blocks.build.js in the editor only.
+			'editor_script' => 'bluck-cgb-block-js',
+			// Enqueue blocks.editor.build.css in the editor only.
+			'editor_style'  => 'bluck-cgb-block-editor-css',
+		)
+	);
 }
-
 // Hook: Block assets.
 add_action( 'init', 'bluck_cgb_block_assets' );
+
+
+add_action( 'enqueue_block_assets', 'myplugin_enqueue_if_block_is_present' ); // Can only be loaded in the footer
+// add_action( 'wp_enqueue_scripts', 'myplugin_enqueue_if_block_is_present' ); // Can be loaded in the both in head and footer
+function myplugin_enqueue_if_block_is_present(){
+
+    if ( has_block( 'cgb/slider' ) ) {
+		wp_enqueue_script('splide-js', plugins_url('assets/splide.min.js', dirname(__FILE__)), null, null);
+		wp_enqueue_script( 'swiper-settings.js', plugins_url('assets/swiper-settings.js', dirname(__FILE__), ['splide-js'], null ));
+
+    }
+}

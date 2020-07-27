@@ -1,0 +1,25 @@
+.wp-block-cgb-slide {
+	padding: 15px 10px;
+	width: 100%;
+	height: 50vh;
+}
+.flickity-prev-next-button.next {
+    right: -60px;
+    background: none;
+    outline-width: 0;
+}
+.flickity-prev-next-button.previous{
+	left: -60px;
+    background: none;
+    outline-width: 0;
+}
+
+.slide-inner {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.entry-content h1, .entry-content h2, .entry-content h3{
+	margin:25px 0 !important;
+}
