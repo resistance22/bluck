@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /**
  * BLOCK: bluck
  *
@@ -15,14 +16,13 @@ const {
 	RichText,
 	InspectorControls,
 	ColorPalette,
-	MediaUpload
+	MediaUpload,
 } = wp.blockEditor;
 const {
 	PanelBody,
-	PanelRow,
 	SelectControl,
 	TextControl,
-	ToggleControl
+	ToggleControl,
 } = wp.components;
 /**
  * Register: aa Gutenberg Block.
@@ -47,42 +47,42 @@ registerBlockType( 'cgb/slide-js', {
 		__( 'CGB Example' ),
 		__( 'create-guten-block' ),
 	],
-	attributes:{
-		slideTitle:{
-			type:'string',
-			source:'html',
-			selector: 'h2'
+	attributes: {
+		slideTitle: {
+			type: 'string',
+			source: 'html',
+			selector: 'h2',
 		},
-		slideText:{
-			type:'string',
-			source:'html',
-			selector:'p'
+		slideText: {
+			type: 'string',
+			source: 'html',
+			selector: 'p',
 		},
-		slideLink:{
-			type:'object',
-			default:{
-				url:null,
-				newTab:false
-			}
+		slideLink: {
+			type: 'object',
+			default: {
+				url: null,
+				newTab: false,
+			},
 		},
-		titleColor:{
-			type:'string',
-			default:'#000'
+		titleColor: {
+			type: 'string',
+			default: '#000',
 		},
-		descColor:{
-			type:'string',
-			default:'#000'
+		descColor: {
+			type: 'string',
+			default: '#000',
 		},
-		backgroundType:{
-			type:'string',
-			default:'Color'
+		backgroundType: {
+			type: 'string',
+			default: 'Color',
 		},
-		backgroundStyle:{
-			type:'object',
-			default:{
-				backgroundColor:'#fff'
-			}
-		}
+		backgroundStyle: {
+			type: 'object',
+			default: {
+				backgroundColor: '#fff',
+			},
+		},
 	},
 
 	/**
@@ -98,7 +98,7 @@ registerBlockType( 'cgb/slide-js', {
 	 */
 	edit: ( props ) => {
 		// Creates a <p class='wp-block-cgb-block-bluck'></p>.
-		const {attributes,setAttributes} = props;
+		const { attributes, setAttributes } = props;
 		const {
 			slideTitle,
 			slideText,
@@ -106,91 +106,97 @@ registerBlockType( 'cgb/slide-js', {
 			titleColor,
 			descColor,
 			backgroundType,
-			backgroundStyle
+			backgroundStyle,
 		} = attributes;
 
-		const onTitleChange = (slideTitle)=>{
-			setAttributes({slideTitle})
-		}
+		const onTitleChange = ( slideTitle ) => {
+			setAttributes( { slideTitle } );
+		};
 
-		const onTextChange = (slideText)=>{
-			setAttributes({slideText})
-		}
-		const onTitleColorChage = (titleColor)=>{
-			setAttributes({titleColor})
-		}
-		const onDescColorChage = (descColor)=>{
-			setAttributes({descColor})
-		}
-		const  changeBGType = (backgroundType)=>{
-			setAttributes({backgroundType})
-		}
-		const onBGColorChange = (Color)=>{
-			setAttributes({backgroundStyle:{backgroundColor:Color}})
-		}
-		const onLinkChange = (url)=>{
-			setAttributes({slideLink:{
-				...slideLink,url:url
-			}})
-		}
+		const onTextChange = ( slideText ) => {
+			setAttributes( { slideText } );
+		};
+		const onTitleColorChage = ( titleColor ) => {
+			setAttributes( { titleColor } );
+		};
+		const onDescColorChage = ( descColor ) => {
+			setAttributes( { descColor } );
+		};
+		const changeBGType = ( backgroundType ) => {
+			setAttributes( { backgroundType } );
+		};
+		const onBGColorChange = ( Color ) => {
+			setAttributes( { backgroundStyle: { backgroundColor: Color } } );
+		};
+		const onLinkChange = ( url ) => {
+			setAttributes( {
+				slideLink: {
+					...slideLink, url: url,
+				},
+			} );
+		};
 
-		const newTabToggle = (checked)=>{
-			setAttributes({slideLink:{
-				...slideLink,newTab:checked
-			}})
-		}
-		const onSelectImage = (Image)=>{
-			setAttributes({backgroundStyle:{
-				backgroundImage:Image.sizes.full.url
-			}})
-		}
+		const newTabToggle = ( checked ) => {
+			setAttributes( {
+				slideLink: {
+					...slideLink, newTab: checked,
+				},
+			} );
+		};
+		const onSelectImage = ( Image ) => {
+			setAttributes( {
+				backgroundStyle: {
+					backgroundImage: Image.sizes.full.url,
+				},
+			} );
+		};
 		return (
-			<div className="bluck-Slide" style={backgroundStyle}>
+			<div className="bluck-Slide" style={ backgroundStyle }>
 				<InspectorControls>
-					<PanelBody title={__("Slide Link")}>
+					<PanelBody title={ __( 'Slide Link' ) }>
 						<TextControl
 							label="Slide URL"
 							value={ slideLink.url }
 							onChange={ onLinkChange }
 						/>
-						    <ToggleControl
-								label="Open in new tab"
-								checked={ slideLink.newTab }
-								onChange={ newTabToggle }
-							/>
+						<ToggleControl
+							label="Open in new tab"
+							checked={ slideLink.newTab }
+							onChange={ newTabToggle }
+						/>
 					</PanelBody>
-					<PanelBody title={__("Slide Font Color")} initialOpen={false}>
-							<p>{__("Select your Title color:")}</p>
-							<ColorPalette
-								value={titleColor}
-								onChange={onTitleColorChage}
-							/>
-							<p>{__("Select your Slide description color:")}</p>
-							<ColorPalette
-								value={descColor}
-								onChange={onDescColorChage}
-							/>
+					<PanelBody title={ __( 'Slide Font Color' ) } initialOpen={ false }>
+						<p>{ __( 'Select your Title color:' ) }</p>
+						<ColorPalette
+							value={ titleColor }
+							onChange={ onTitleColorChage }
+						/>
+						<p>{ __( 'Select your Slide description color:' ) }</p>
+						<ColorPalette
+							value={ descColor }
+							onChange={ onDescColorChage }
+						/>
 					</PanelBody>
-					<PanelBody title={__("Slide Background Settings")} initialOpen={false}>
-						<p>{__("Select Your Slide Background Type:")}</p>
+					<PanelBody title={ __( 'Slide Background Settings' ) } initialOpen={ false }>
+						<p>{ __( 'Select Your Slide Background Type:' ) }</p>
 						<SelectControl
-							label={__("Background Type:")}
+							label={ __( 'Background Type:' ) }
 							value={ backgroundType }
 							options={ [
-									{ label: __('Bacground Color'), value: 'Color' },
-									{ label: __('Image'), value: 'Image' },
+								{ label: __( 'Bacground Color' ), value: 'Color' },
+								{ label: __( 'Image' ), value: 'Image' },
 							] }
 							onChange={ changeBGType }
 						/>
-						{ backgroundType=="Color" && (
+						{ backgroundType === 'Color' && (
 							<div>
-								<p>{__("Select Your Slide Backgroud Color:")}</p>
-								<ColorPalette value={backgroundStyle.backgroundColor} onChange={onBGColorChange} />
+								<p>{ __( 'Select Your Slide Backgroud Color:' ) }</p>
+								<ColorPalette value={ backgroundStyle.backgroundColor } onChange={ onBGColorChange } />
 							</div>
-							)
+						)
 						}
 						{
-							backgroundType=="Image" &&(
+							backgroundType === 'Image' && (
 								<p><strong>test</strong></p>
 							)
 						}
@@ -198,20 +204,20 @@ registerBlockType( 'cgb/slide-js', {
 				</InspectorControls>
 				<div className={ props.className }>
 					<RichText
-						key='editable'
-						tagName='h2'
-						placeholder={__('Slide Title')}
-						value={slideTitle}
-						onChange={onTitleChange}
-						style={{color:titleColor}}
+						key="editable"
+						tagName="h2"
+						placeholder={ __( 'Slide Title' ) }
+						value={ slideTitle }
+						onChange={ onTitleChange }
+						style={ { color: titleColor } }
 					/>
 					<RichText
-						key='editable'
-						tagName='p'
-						placeholder={__('Slide description')}
-						value={slideText}
-						onChange={onTextChange}
-						style={{color:descColor}}
+						key="editable"
+						tagName="p"
+						placeholder={ __( 'Slide description' ) }
+						value={ slideText }
+						onChange={ onTextChange }
+						style={ { color: descColor } }
 					/>
 				</div>
 			</div>
@@ -231,19 +237,19 @@ registerBlockType( 'cgb/slide-js', {
 	 */
 	save: ( props ) => {
 		const { attributes } = props;
-		const {slideText, slideTitle,titleColor, backgroundStyle, descColor} = attributes;
-		let test = (
-			<div className="bluck-Slide" style={backgroundStyle}>
+		const { slideText, slideTitle, titleColor, backgroundStyle, descColor } = attributes;
+		const test = (
+			<div className="bluck-Slide" style={ backgroundStyle }>
 				<RichText.Content tagName="h2"
-										value = {slideTitle}
-										style = {{color:titleColor}}
+					value={ slideTitle }
+					style={ { color: titleColor } }
 				/>
 				<RichText.Content tagName="p"
-										value = {slideText}
-										style = {{color:descColor}}
+					value={ slideText }
+					style={ { color: descColor } }
 				/>
 			</div>
-		)
+		);
 		return test;
 	},
 } );
