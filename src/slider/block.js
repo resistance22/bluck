@@ -149,10 +149,22 @@ registerBlockType( 'cgb/slide-js', {
 			} );
 		};
 		const onSelectImage = ( IMG ) => {
-			setAttributes( { backgroundImage: IMG.sizes.full.url } );
+			setAttributes( { backgroundImage: `url(${ IMG.sizes.full.url })` } );
 		};
+
+
+		let style;
+		if ( backgroundType === 'Image' ) {
+			style = {
+				backgroundImage: backgroundImage,
+				backgroundSize: 'cover',
+				backgroundRepeat: 'no-repeat',
+			};
+		} else if ( backgroundType === 'Color' ) {
+			style = backgroundStyle;
+		}
 		return (
-			<div className="bluck-Slide" style={ backgroundStyle }>
+			<div className="bluck-Slide" style={ style }>
 				<InspectorControls>
 					<PanelBody title={ __( 'Slide Link' ) }>
 						<TextControl
@@ -253,9 +265,19 @@ registerBlockType( 'cgb/slide-js', {
 	 */
 	save: ( props ) => {
 		const { attributes } = props;
-		const { slideText, slideTitle, titleColor, backgroundStyle, descColor } = attributes;
+		const { slideText, slideTitle, titleColor,backgroundImage, backgroundStyle, descColor, backgroundType } = attributes;
+		let style;
+		if ( backgroundType === 'Image' ) {
+			style = {
+				backgroundImage: backgroundImage,
+				backgroundSize: 'cover',
+				backgroundRepeat: 'no-repeat',
+			};
+		} else if ( backgroundType === 'Color' ) {
+			style = backgroundStyle;
+		}
 		const test = (
-			<div className="bluck-Slide" style={ backgroundStyle }>
+			<div className="bluck-Slide" style={ style }>
 				<RichText.Content tagName="h2"
 					value={ slideTitle }
 					style={ { color: titleColor } }
