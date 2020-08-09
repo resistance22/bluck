@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const {
 	RichText,
@@ -27,16 +28,30 @@ export default{
 		width: {
 			type: 'number',
 		},
+		arrowInside:{
+			type: 'bool',
+			defualt: true,
+		},
 	},
-	edit: (props)=>{
+
+	edit: ( props )=>{
 		const { attributes, setAttributes } = props;
-		const { width } = attributes;
+		const { arrowInside } = attributes;
+		const toggleArrow = ( arrowInside )=>{
+			setAttributes( { arrowInside } );
+		};
+
 		return (
 			<div>
 				<InspectorControls>
 					<PanelBody
-						title={ __( 'Slide Link' ) }
+						title={ __( 'Slider Settings' ) }
 					>
+						<ToggleControl
+							label="Arrows inside"
+							checked={ arrowInside }
+							onChange={ toggleArrow }
+						/>
 
 					</PanelBody>
 				</InspectorControls>
@@ -48,9 +63,13 @@ export default{
 			</div>
 		)
 	},
-	save: (props)=>{
+	save: ( props )=>{
+		const { attributes } = props;
+		const { arrowInside } = attributes;
+
+		let classes = arrowInside ? 'bluck-slider bluck-slider-container arrow-inside' : 'bluck-slider bluck-slider-container arrow-outside';
 		return (
-			<div className="bluck-slider bluck-slider-container">
+			<div className={ classes }>
 				<div className="bluck-slide-inner">
 					<InnerBlocks.Content />
 				</div>

@@ -13,6 +13,7 @@ const {
 	TextControl,
 	ToggleControl,
 	IconButton,
+	RangeControl,
 } = wp.components;
 
 export default {
@@ -52,6 +53,14 @@ export default {
 			type: 'string',
 			default: '#000',
 		},
+		overlayColor: {
+			type: 'string',
+			default: '#fff',
+		},
+		overLayOpacity: {
+			type: 'number',
+			default: 1,
+		},
 		backgroundType: {
 			type: 'string',
 			default: 'Color',
@@ -90,10 +99,18 @@ export default {
 			backgroundType,
 			backgroundStyle,
 			backgroundImage,
+			overlayColor,
+			overLayOpacity,
 		} = attributes;
 
 		const onTitleChange = ( slideTitle ) => {
 			setAttributes( { slideTitle } );
+		};
+		const onOverlayColorChange = ( overlayColor ) => {
+			setAttributes( { overlayColor } );
+		};
+		const onOverlayOpacityChange = ( overLayOpacity ) =>{
+			setAttributes( {  overLayOpacity } );
 		};
 
 		const onTextChange = ( slideText ) => {
@@ -188,26 +205,43 @@ export default {
 						}
 						{
 							backgroundType === 'Image' && (
-								<MediaUpload
-									onSelect={ onSelectImage }
-									value={ backgroundImage }
-									allowedTypes={ [ 'image' ] }
-									render={ ( { open } )=>{
-									// eslint-disable-next-line no-unused-expressions
-										return ( <IconButton
-											onClick={ open }
-											icon="upload"
-											className="editor-media-placeholder__button is-button is-default is-large"
-										>
-											Background Image
-										</IconButton> );
-									} }
-								/>
+								<div>
+									<MediaUpload
+										onSelect={ onSelectImage }
+										value={ backgroundImage }
+										allowedTypes={ [ 'image' ] }
+										render={ ( { open } )=>{
+										// eslint-disable-next-line no-unused-expressions
+											return ( <IconButton
+												onClick={ open }
+												icon="upload"
+												className="editor-media-placeholder__button is-button is-default is-large"
+											>
+												Background Image
+											</IconButton> );
+										} }
+									/>
+									<p>{ __( 'Please choose your overlay color:' ) }</p>
+									<ColorPalette value={ overlayColor } onChange={ onOverlayColorChange } />
+									<RangeControl
+										label="Ovelay Opacity"
+										value={ overLayOpacity }
+										onChange={ onOverlayOpacityChange }
+										min={ 0 }
+										max={ 1 }
+										step={ 0.05 }
+									/>
+								</div>
 							)
 						}
+
 					</PanelBody>
 				</InspectorControls>
 				<div className="slide-inner">
+					<div className="overlay trapezoid" style={ {
+						backgroundColor: overlayColor,
+						opacity: overLayOpacity,
+					} }></div>
 					<div className={ props.className }>
 						<RichText
 							key="editable"
@@ -245,7 +279,17 @@ export default {
 	 */
 	save: ( props ) => {
 		const { attributes } = props;
-		const { slideText, slideTitle, titleColor, backgroundImage, backgroundStyle, descColor, backgroundType } = attributes;
+		const {
+			slideText,
+			slideTitle,
+			titleColor,
+			backgroundImage,
+			backgroundStyle,
+			descColor,
+			backgroundType,
+			overlayColor,
+			overLayOpacity,
+		} = attributes;
 		let style;
 		if ( backgroundType === 'Image' ) {
 			style = {
@@ -256,18 +300,25 @@ export default {
 		} else if ( backgroundType === 'Color' ) {
 			style = backgroundStyle;
 		}
+		console.log(overLayOpacity);
 		const test = (
 			<div className="bluck-Slide" style={ style }>
 				<div className="slide-inner">
-					<RichText.Content tagName="h2"
-						value={ slideTitle }
-						style={ { color: titleColor } }
-					/>
-					<RichText.Content tagName="p"
-						value={ slideText }
-						style={ { color: descColor } }
-					/>
-					<InnerBlocks.Content />
+					<div className="overlay trapezoid" style={ {
+						backgroundColor: overlayColor,
+						opacity: overLayOpacity,
+					} }></div>
+					<div className="slide-content">
+						<RichText.Content tagName="h2"
+							value={ slideTitle }
+							style={ { color: titleColor } }
+						/>
+						<RichText.Content tagName="p"
+							value={ slideText }
+							style={ { color: descColor } }
+						/>
+						<InnerBlocks.Content />
+					</div>
 				</div>
 			</div>
 		);
